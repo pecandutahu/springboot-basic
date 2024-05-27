@@ -39,6 +39,30 @@ public class CustomerService {
         return customerRepository.save(customers);
     }
 
+    public List<Customers> getAllCustomers() {
+        return customerRepository.findAll();
+    }
+
+    public Optional<Customers> getCustomerById(Integer id) {
+        return customerRepository.findById(id);
+    }
+
+    public Customers updateCustomer(Integer customerId, Customers customersDetails) {
+        Customers customers = customerRepository.findById(customerId).orElseThrow();
+        customers.setCustomerName(customersDetails.getCustomerName());
+        customers.setCustomerAddress(customersDetails.getCustomerAddress());
+        customers.setCustomerCode(customersDetails.getCustomerCode());
+        customers.setCustomerPhone(customersDetails.getCustomerPhone());
+        customers.setIsActive(customersDetails.getIsActive());
+        customers.setLastOrderDate(customersDetails.getLastOrderDate());
+        return customerRepository.save(customers);
+    }
+
+    public void deleteCustomer(Integer id) {
+        customerRepository.deleteById(id);
+    }
+
+    
     // public ResponseEntity<MessageResponse> createCustomer(CustomerRequest request){
     //     try {
             
@@ -75,27 +99,4 @@ public class CustomerService {
     //             .body(new MessageResponse(message, HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase()));
     //     }
     // }
-
-    public List<Customers> getAllCustomers() {
-        return customerRepository.findAll();
-    }
-
-    public Optional<Customers> getCustomerById(Integer id) {
-        return customerRepository.findById(id);
-    }
-
-    public Customers updateCustomer(Integer customerId, Customers customersDetails) {
-        Customers customers = customerRepository.findById(customerId).orElseThrow();
-        customers.setCustomerName(customersDetails.getCustomerName());
-        customers.setCustomerAddress(customersDetails.getCustomerAddress());
-        customers.setCustomerCode(customersDetails.getCustomerCode());
-        customers.setCustomerPhone(customersDetails.getCustomerPhone());
-        customers.setIsActive(customersDetails.getIsActive());
-        customers.setLastOrderDate(customersDetails.getLastOrderDate());
-        return customerRepository.save(customers);
-    }
-
-    public void deleteCustomer(Integer id) {
-        customerRepository.deleteById(id);
-    }
 }
