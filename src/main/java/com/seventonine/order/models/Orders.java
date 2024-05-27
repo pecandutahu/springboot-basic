@@ -1,17 +1,20 @@
 package com.seventonine.order.models;
 
 import java.io.Serializable;
-import java.security.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,34 +27,42 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@IdClass(OrdersId.class)
 public class Orders implements Serializable{
 
-    // @Id
-    // @Column(name = "order_id", unique = true, nullable = false)
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // private int orderId;
+    @Id
+    @Column(name = "order_id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
+    private Integer orderId;
 
     @Column(name = "order_code")
     private String orderCode;
 
     @Column(name = "order_date")
-    private Timestamp orderDate;
+    private LocalDateTime orderDate;
 
     @Column(name = "total_price")
     private Double totalPrice;
 
-    @Id
     @ManyToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
-    private Customers customers;
+    @JoinColumn(name = "customer_id")
+    private Customers customer;
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "items_id", referencedColumnName = "items_id")
-    private Items items;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderItem> orderItems;
 
-    @Column(name = "quantity")
-    private int quantity;
+    @PrePersist
+    protected void onCreate() {
+        this.orderDate = LocalDateTime.now();
+    }
+
+    public List<OrderItem> getOrderItems() {
+        
+        return this.orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
 
 }
