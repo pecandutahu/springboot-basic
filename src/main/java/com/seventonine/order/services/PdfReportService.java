@@ -24,7 +24,7 @@ public class PdfReportService {
         PdfDocument pdfDoc = new PdfDocument(writer);
         Document document = new Document(pdfDoc);
 
-        document.add(new Paragraph("Order Report").setFontSize(18).setBold().setFontColor(ColorConstants.BLACK));
+        document.add(new Paragraph("Order Summary Report").setFontSize(18).setBold().setFontColor(ColorConstants.BLACK));
         document.add(new Paragraph("\n"));
 
         Table table = new Table(new float[]{1, 2, 2, 2});
