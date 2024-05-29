@@ -48,7 +48,7 @@ public class Orders implements Serializable{
     @JoinColumn(name = "customer_id")
     private Customers customer;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
 
     @PrePersist

@@ -29,9 +29,8 @@ public class OrderItem {
 
     private Integer orderItemId;
     
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Orders order;
+    @Column(name = "order_id")
+    private int orderId;
 
     @ManyToOne
     @JoinColumn(name = "item_id")
@@ -46,9 +45,9 @@ public class OrderItem {
     @Column(name = "subtotal")
     private int subtotal;
 
-    public OrderItem(Items item, int quantity, Orders order) {
+    public OrderItem(Items item, int quantity, int orderId) {
         this.item = item;
         this.quantity = quantity;
-        this.order = order;
+        this.orderId = orderId;
     }
 }

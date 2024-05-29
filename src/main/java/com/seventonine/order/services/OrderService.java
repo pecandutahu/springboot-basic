@@ -22,7 +22,7 @@ public class OrderService {
     public Orders saveOrders(Orders order){
         Orders savedOrder = orderRepository.save(order);
         for (OrderItem orderItem : order.getOrderItems()) {
-            orderItem.setOrder(savedOrder);
+            orderItem.setOrderId(savedOrder.getOrderId());
             orderItemService.savOrderItem(orderItem);
         }
         return orderRepository.save(order);
