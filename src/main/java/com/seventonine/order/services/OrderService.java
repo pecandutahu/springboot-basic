@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.seventonine.order.models.Customers;
 import com.seventonine.order.models.OrderItem;
 import com.seventonine.order.models.Orders;
 import com.seventonine.order.repositories.OrdersRepository;

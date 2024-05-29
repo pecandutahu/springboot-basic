@@ -1,9 +1,12 @@
 package com.seventonine.order.controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.seventonine.order.models.Orders;
+import com.seventonine.order.repositories.OrdersRepository;
 import com.seventonine.order.services.OrderService;
+import com.seventonine.order.services.PdfReportService;
 
 @RestController
 @RequestMapping("/order")
@@ -23,6 +28,12 @@ public class OrderController {
     @Autowired
 
     private OrderService orderService;
+    
+    @Autowired
+    private PdfReportService pdfReportService;
+
+    @Autowired
+    private OrdersRepository ordersRepository;
 
     @PostMapping("/create")
     public ResponseEntity<Orders> createOrder(@RequestBody Orders orders) {
@@ -54,6 +65,19 @@ public class OrderController {
     public ResponseEntity<Orders> deleteOrder(@PathVariable Integer id) {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
+    }
+
+    
+    @GetMapping("/downloadReport")
+    public ResponseEntity<byte[]> downloadReport() {
+        List<Orders> orders = orderService.getAllOrders();
+        
+        byte[] pdfReport = pdfReportService.generateReport(orders);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=order_report.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfReport);
     }
     
 }
