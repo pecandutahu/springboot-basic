@@ -22,6 +22,8 @@ import com.seventonine.order.repositories.OrdersRepository;
 import com.seventonine.order.services.OrderService;
 import com.seventonine.order.services.PdfReportService;
 
+import net.sf.jasperreports.engine.JRException;
+
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -68,10 +70,22 @@ public class OrderController {
     }
 
     
-    @GetMapping("/downloadReport")
-    public ResponseEntity<byte[]> downloadReport() {
-        List<Orders> orders = orderService.getAllOrders();
+    // @GetMapping("/downloadReport")
+    // public ResponseEntity<byte[]> downloadReport() {
+    //     List<Orders> orders = orderService.getAllOrders();
         
+    //     byte[] pdfReport = pdfReportService.generateReport(orders);
+
+    //     return ResponseEntity.ok()
+    //             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=order_report.pdf")
+    //             .contentType(MediaType.APPLICATION_PDF)
+    //             .body(pdfReport);
+    // }
+
+
+    @GetMapping("/downloadReport")
+    public ResponseEntity<byte[]> downloadReport() throws JRException {
+        List<Orders> orders = orderService.getAllOrders();
         byte[] pdfReport = pdfReportService.generateReport(orders);
 
         return ResponseEntity.ok()

@@ -3,7 +3,6 @@ package com.seventonine.order.controllers;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seventonine.order.dto.request.CustomerRequest;
 import com.seventonine.order.dto.response.MessageResponse;
 import com.seventonine.order.models.Customers;
 import com.seventonine.order.services.CustomerService;
 
-import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -36,11 +33,6 @@ public class CustomerController {
         Customers createdCustomer = customerService.saveCustomer(customers);
         return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
     }
-    // public ResponseEntity<MessageResponse> create(@RequestBody CustomerRequest request) {
-    //     log.error("request", request);
-
-    //     return customerService.createCustomer(request);
-    // }
 
     @GetMapping("/lists")
     public List<Customers> getAllCustomers() {

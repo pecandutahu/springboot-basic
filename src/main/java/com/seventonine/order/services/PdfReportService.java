@@ -1,51 +1,46 @@
 package com.seventonine.order.services;
 
 import com.seventonine.order.models.Orders;
-import com.itextpdf.kernel.colors.ColorConstants;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PdfReportService {
 
-    public byte[] generateReport(List<Orders> orders) {
+    public byte[] generateReport(List<Orders> orders) throws JRException {
+        // Compile the Jasper report from .jrxml to .jasper
+        JasperReport jasperReport = JasperCompileManager.compileReport(getClass().getResourceAsStream("/orderReport.jrxml"));
+
+        // Get your data source
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(orders);
+
+        // Add parameters
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("ReportTitle", "Order Report");
+        parameters.put("DataCollection", dataSource);
+
+        // Fill the report
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+        // Export the report to a PDF file
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-        PdfWriter writer = new PdfWriter(byteArrayOutputStream);
-        PdfDocument pdfDoc = new PdfDocument(writer);
-        Document document = new Document(pdfDoc);
-
-        document.add(new Paragraph("Order Summary Report").setFontSize(18).setBold().setFontColor(ColorConstants.BLACK));
-        document.add(new Paragraph("\n"));
-
-        Table table = new Table(new float[]{1, 2, 2, 2});
-        // table.setWidthPercent(100);
-
-        table.addHeaderCell(new Cell().add(new Paragraph("Order Code").setBold()));
-        table.addHeaderCell(new Cell().add(new Paragraph("Customer Name").setBold()));
-        table.addHeaderCell(new Cell().add(new Paragraph("Order Date").setBold()));
-        table.addHeaderCell(new Cell().add(new Paragraph("Total Price").setBold()));
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        for (Orders order : orders) {
-            table.addCell(new Cell().add(new Paragraph(order.getOrderCode())));
-            table.addCell(new Cell().add(new Paragraph(order.getCustomer().getCustomerName())));
-            table.addCell(new Cell().add(new Paragraph(order.getOrderDate().format(formatter))));
-            table.addCell(new Cell().add(new Paragraph(String.valueOf(order.getTotalPrice()))));
-        }
-
-        document.add(table);
-        document.close();
+        JRPdfExporter exporter = new JRPdfExporter();
+        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(byteArrayOutputStream));
+        exporter.exportReport();
 
         return byteArrayOutputStream.toByteArray();
     }

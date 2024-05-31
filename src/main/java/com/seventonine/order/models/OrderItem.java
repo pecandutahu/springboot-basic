@@ -42,9 +42,6 @@ public class OrderItem {
     @Column(name = "price")
     private int price;
 
-    @Column(name = "subtotal")
-    private int subtotal;
-
     public OrderItem(Items item, int quantity, int orderId) {
         this.item = item;
         this.quantity = quantity;
