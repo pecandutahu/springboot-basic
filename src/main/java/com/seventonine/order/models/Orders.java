@@ -46,7 +46,7 @@ public class Orders implements Serializable{
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    private Customers customer;
+    private Customer customer;
 
     @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;

@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 
-public class Customers {
+public class Customer {
     @Id
     @Column(name="customer_id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +45,7 @@ public class Customers {
     private String customerCode;
 
     @NotEmpty(message = "Phone is required")
-    @Size(min = 8, max = 16, message = "Phone must be between 2 and 100 characters")
+    @Size(min = 8, max = 16, message = "Phone must be between 2 and 16 characters")
     @Column(name = "customer_phone")
     private String customerPhone;
 

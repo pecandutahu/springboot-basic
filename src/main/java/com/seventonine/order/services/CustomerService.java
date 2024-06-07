@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service;
 
 import com.seventonine.order.dto.request.CustomerRequest;
 import com.seventonine.order.dto.response.MessageResponse;
-import com.seventonine.order.models.Customers;
+import com.seventonine.order.exceptions.ResourceNotFoundException;
+import com.seventonine.order.models.Customer;
 import com.seventonine.order.repositories.CustomerRepository;
 
 import jakarta.validation.ConstraintViolation;
@@ -35,20 +36,20 @@ public class CustomerService {
     @Autowired 
     private MessageSource messageSource;
 
-    public Customers saveCustomer(Customers customers) {
+    public Customer saveCustomer(Customer customers) {
         return customerRepository.save(customers);
     }
 
-    public List<Customers> getAllCustomers() {
+    public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
 
-    public Optional<Customers> getCustomerById(Integer id) {
+    public Optional<Customer> getCustomerById(Integer id) {
         return customerRepository.findById(id);
     }
 
-    public Customers updateCustomer(Integer customerId, Customers customersDetails) {
-        Customers customers = customerRepository.findById(customerId).orElseThrow();
+    public Customer updateCustomer(Integer customerId, Customer customersDetails) {
+        Customer customers = customerRepository.findById(customerId).orElseThrow();
         customers.setCustomerName(customersDetails.getCustomerName());
         customers.setCustomerAddress(customersDetails.getCustomerAddress());
         customers.setCustomerCode(customersDetails.getCustomerCode());
@@ -59,6 +60,11 @@ public class CustomerService {
     }
 
     public void deleteCustomer(Integer id) {
+        Optional<Customer> customer = customerRepository.findById(id);
+        if(!customer.isPresent()) {
+            throw new ResourceNotFoundException("Customer not found");
+        }
+            
         customerRepository.deleteById(id);
     }
 

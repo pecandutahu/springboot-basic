@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Embeddable
 public class OrdersId implements Serializable {
-    private Customers customers;
+    private Customer customers;
     private Items items;
 }

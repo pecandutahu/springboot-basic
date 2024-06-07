@@ -2,8 +2,8 @@ package com.seventonine.order.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.seventonine.order.models.Customers;
+import com.seventonine.order.models.Customer;
 
-public interface CustomerRepository extends JpaRepository<Customers, Integer>{
+public interface CustomerRepository extends JpaRepository<Customer, Integer>{
     
 }
