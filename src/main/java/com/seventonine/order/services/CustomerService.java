@@ -33,9 +33,6 @@ public class CustomerService {
     
     private CustomerRepository customerRepository;
 
-    @Autowired 
-    private MessageSource messageSource;
-
     public Customer saveCustomer(Customer customers) {
         return customerRepository.save(customers);
     }
@@ -45,11 +42,15 @@ public class CustomerService {
     }
 
     public Optional<Customer> getCustomerById(Integer id) {
-        return customerRepository.findById(id);
+        Optional<Customer> customer = customerRepository.findById(id);
+        if (!customer.isPresent()) {
+            throw new ResourceNotFoundException("Customer not found");
+        }
+        return customer;
     }
 
     public Customer updateCustomer(Integer customerId, Customer customersDetails) {
-        Customer customers = customerRepository.findById(customerId).orElseThrow();
+        Customer customers = customerRepository.findById(customerId).orElseThrow(()->new ResourceNotFoundException("Customer Not Found"));
         customers.setCustomerName(customersDetails.getCustomerName());
         customers.setCustomerAddress(customersDetails.getCustomerAddress());
         customers.setCustomerCode(customersDetails.getCustomerCode());
