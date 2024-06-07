@@ -1,30 +1,20 @@
 package com.seventonine.order.services;
 
-import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 // import org.springframework.security.config.web.server.ServerHttpSecurity.HttpsRedirectSpec;
 import org.springframework.stereotype.Service;
 
-import com.seventonine.order.dto.request.CustomerRequest;
-import com.seventonine.order.dto.response.MessageResponse;
 import com.seventonine.order.exceptions.ResourceNotFoundException;
 import com.seventonine.order.models.Customer;
 import com.seventonine.order.repositories.CustomerRepository;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 
 public class CustomerService {
     
@@ -34,6 +24,9 @@ public class CustomerService {
     private CustomerRepository customerRepository;
 
     public Customer saveCustomer(Customer customers) {
+
+        String newCode = generateCustomerCode();
+        customers.setCustomerCode(newCode);
         return customerRepository.save(customers);
     }
 
@@ -67,6 +60,25 @@ public class CustomerService {
         }
             
         customerRepository.deleteById(id);
+    }
+    private String generateCustomerCode() {
+        String maxCode = customerRepository.findMaxCustomerCode();
+        String newCode = null;
+
+        if (maxCode != null && !maxCode.isEmpty()) {
+            String datePart = maxCode.substring(5, 13);
+            String sequencePart = maxCode.substring(14);
+
+            int sequenceNumber = Integer.parseInt(sequencePart) + 1;
+            newCode = String.format("CUST-%s-%04d", datePart, sequenceNumber);
+        } else {
+            String datePattern = "yyyyMMdd";
+            SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
+            String date = sdf.format(new Date());
+            newCode = String.format("CUST-%s-%04d", date, 1);
+        }
+
+        return newCode;
     }
 
     
