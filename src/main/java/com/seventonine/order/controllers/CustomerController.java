@@ -20,11 +20,9 @@ import com.seventonine.order.models.Customers;
 import com.seventonine.order.services.CustomerService;
 
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/customer")
-@Slf4j
 
 public class CustomerController {
     @Autowired
