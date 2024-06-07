@@ -2,7 +2,6 @@ package com.seventonine.order.models;
 
 import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.CreatedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,15 +31,21 @@ public class Customers {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int customerId;
 
+    @NotEmpty(message = "Name is required")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     @Column(name = "customer_name", nullable = false)
     private String customerName;
 
+    @NotEmpty(message = "Address is required")
+    @Size(min = 2, max = 100, message = "Address must be between 2 and 100 characters")
     @Column(name = "customer_address")
     private String customerAddress;
 
     @Column(name = "customer_code")
     private String customerCode;
 
+    @NotEmpty(message = "Phone is required")
+    @Size(min = 8, max = 16, message = "Phone must be between 2 and 100 characters")
     @Column(name = "customer_phone")
     private String customerPhone;
 

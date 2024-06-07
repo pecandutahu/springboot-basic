@@ -19,6 +19,7 @@ import com.seventonine.order.dto.response.MessageResponse;
 import com.seventonine.order.models.Customers;
 import com.seventonine.order.services.CustomerService;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -29,7 +30,7 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
     @PostMapping("/create")
-    public ResponseEntity<Customers> createCustomer(@RequestBody Customers customers) {
+    public ResponseEntity<Customers> createCustomer(@Valid @RequestBody Customers customers) {
         Customers createdCustomer = customerService.saveCustomer(customers);
         return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
     }
@@ -50,7 +51,7 @@ public class CustomerController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Customers> updateCustomer(@PathVariable Integer id, @RequestBody Customers customer) {
+    public ResponseEntity<Customers> updateCustomer(@PathVariable Integer id, @Valid @RequestBody Customers customer) {
         Customers updateCustomers = customerService.updateCustomer(id, customer);
         return ResponseEntity.ok(updateCustomers);
     }
