@@ -18,19 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.seventonine.order.models.Items;
 import com.seventonine.order.services.ItemService;
 
-import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/items")
 
-@Slf4j
 public class ItemController {
     @Autowired
     private ItemService itemService;
 
     @PostMapping("/create")
-    public ResponseEntity<Items> createItem(@RequestBody Items items) {
-        log.info("null", items);
+    public ResponseEntity<Items> createItem(@Valid @RequestBody Items items) {
 
         Items createdItems = itemService.saveItems(items);
         return new ResponseEntity<>(createdItems, HttpStatus.CREATED);
